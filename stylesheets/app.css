@@ -1,0 +1,123 @@
+/* Foundation v2.2 http://foundation.zurb.com */
+/* Artfully masterminded by ZURB  */
+
+/* -------------------------------------------------- 
+   Table of Contents
+-----------------------------------------------------
+:: Shared Styles
+:: Page Name 1
+:: Page Name 2
+*/
+
+
+/* -----------------------------------------
+   Shared Styles
+----------------------------------------- */
+body{
+	background:url(../images/purty_wood.png) repeat;
+}
+
+
+#header{
+	background:rgba(0,0,0,.6);
+	padding:10px 0;
+	color:#ccc;
+	box-shadow: 0 2px 5px rgba(0,0,0,.55);
+	-webkit-box-shadow: 0 2px 5px rgba(0,0,0,.55);
+	-moz-box-shadow: 0 2px 5px rgba(0,0,0,0.55);
+	border-bottom:1px solid #444;
+}
+
+nav a.button {margin-top:5px;}
+
+h1{
+	font-weight:normal;
+	font-size:36px;
+	color:#efefef;
+	padding:0;
+	margin:0;
+	text-shadow:0 1px 0 #fff;
+}
+
+h2{
+	color:rgba(0,0,0,.75);
+	text-shadow:0 1px 0 rgba(250,250,250,.5);
+}
+
+div.panel{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+ .button.right{margin-left:5px;}
+
+/* -----------------------------------------
+   Check-in
+----------------------------------------- */
+#checkIn{margin-top:50px;}
+
+#otherGuardian{display:none;}
+
+/* -----------------------------------------
+   Check Out
+----------------------------------------- */
+#checkOut{
+	margin-top:600px;
+}
+
+/* -----------------------------------------
+  Register Child
+----------------------------------------- */
+#addChild{
+	margin-top:600px;
+}
+#addChild form {margin:0;}
+.dobSelect{display:inline-block; width:81px;}
+
+/* -----------------------------------------
+   Register Guardian
+----------------------------------------- */
+#addGuardian{
+	margin-top:600px;
+}
+/* -----------------------------------------
+   Footer
+----------------------------------------- */
+#footer{
+	margin-top:50px;
+	background:rgba(0,0,0,.6);
+	border-top:1px solid #ccc;
+	padding-top:10px;
+	padding-bottom:10px;
+	color:#efefef;
+}
+#footer h3{
+	font-weight:normal;
+	color:#efefef;
+	text-shadow:0 1px 0 #000;
+	border-bottom:1px solid #efefef;
+}
+
+#copyright {
+	color:#000;
+	border-top:1px solid #363636;
+	margin-top:10px;
+	padding-top:10px;
+	text-align:center;
+}
+#copyright a {color:#999;}
+#copyright a:hover{color: #efefef;}
+
+
+/* -----------------------------------------
+   Forms
+----------------------------------------- */
+select {
+	font-size:13px;
+	width:254px;
+	padding:5px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;	
+	border-radius: 2px;
+	border:1px solid #bbb;
+}

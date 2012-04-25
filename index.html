@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+
+	<!-- Set the viewport width to device width for mobile -->
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Simple Check In</title>
+  
+	<!-- Included CSS Files -->
+	<link rel="stylesheet" href="stylesheets/foundation.css">
+	<link rel="stylesheet" href="stylesheets/app.css">
+
+	<!--[if lt IE 9]>
+		<link rel="stylesheet" href="stylesheets/ie.css">
+	<![endif]-->
+
+
+	<!-- IE Fix for HTML5 Tags -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+<a id="top"></a>
+	<div class="container" id="header">
+		<div class="row">
+			<div class="four columns">
+				<h1>Simple Check In</h1>
+			</div>
+			<div class="eight columns">
+				<nav>
+					<a href="#checkIn" class="nice black button radius scroll">Check In</a>
+					<a href="#checkOut" class="nice black button radius scroll">Check Out</a>
+					<a href="#addChild" class="nice black button radius scroll">Register Child</a>
+					<a href="#addGuardian" class="nice black button radius scroll">Register Gaurdian</a>
+				</nav>
+			</div>		
+		</div>	
+	</div>
+
+	<div class="container" id="checkIn">
+		<div class="row">
+			<div class="six columns centered">
+				<h2>Check In</h2>
+				<div class="panel">
+				
+				<form action="#" id="checkInForm" class="nice">
+					<p>
+						<label>Child</label>
+						<select>
+							<option value="Albert Rankin">Albert Rankin</option>
+							<option value="Charlie Measamer">Charlie Measamer</option>
+							<option value="Josh Measamer">Josh Measamer</option>
+							<option value="Brent Measamer">Brent Measamer</option>
+						</select>
+						<ul id="children">
+						</ul>
+					</p>
+					<p>
+						<label>Guardian</label>
+						<select id="guardianSelect">
+							<option value="Kelly Measamer">Kelly Measamer</option>
+							<option value="Bryan Rankin">Bryan Rankin</option>
+							<option value="Jennifer Rankin">Jennifer Rankin</option>
+							<option value="other">Other</option>
+						</select>
+						<div id="otherGuardian">
+							<label>Other Guardian</label>
+							<input type="text" name="guardianIn" id="guardianIn" class="input-text">
+						</div>
+						
+					</p>
+
+					
+					<button type="submit" class="nice black button radius">Check In</button>
+				</form>
+				</div><!-- end panel -->
+				<a href="#top" class="nice black button radius small right scroll">Menu</a>
+				<a href="#addChild" class="nice black button radius small scroll right">Register Child</a>
+			</div>
+		</div> <!-- End row -->
+	</div> <!-- End #checkIn -->
+
+
+	<div class="container" id="checkOut">
+		<div class="row">
+			<div class="six columns centered">
+				<h2>Check Out</h2>
+				<div class="panel">
+					<form action="#" id="checkOutForm" class="nice">
+						<p>
+						<label>Child</label>
+						<select>
+							<option value="Albert Rankin">Albert Rankin</option>
+							<option value="Charlie Measamer">Charlie Measamer</option>
+							<option value="Josh Measamer">Josh Measamer</option>
+							<option value="Brent Measamer">Brent Measamer</option>
+						</select>
+					</p>
+					<p>
+						<label>Guardian</label>
+						<select>
+							<option value="Kelly Measamer">Kelly Measamer</option>
+							<option value="Bryan Rankin">Bryan Rankin</option>
+							<option value="Jennifer Rankin">Jennifer Rankin</option>
+						</select>
+					</p>
+					
+					<button type="submit" class="nice black button radius">Check Out</button>
+					</form>
+				</div><!-- end panel -->
+				<a href="#top" class="nice black button radius small right scroll">Menu</a>
+			</div> <!-- End six columns -->
+		</div><!-- end row -->
+	</div><!-- End Checkout -->
+
+	<div class="container" id="addChild">
+		<div class="row">
+			<div class="six columns centered">
+				<h2>Register Child</h2>
+				<div class="panel">
+						<form action="#" id="addChildForm" class="nice">
+							<p>
+								<label>First Name</label>
+								<input type="text" name="first-name-child" id="first-name-child" class="input-text">
+							</p>
+							<p>
+								<label>Last Name</label>
+								<input type="text" name="last-name-child" id="last-name-child" class="input-text">
+							</p>
+							<p>
+								<label>Birthday</label>
+								<select name="dobMonth" id="dobMonth" class="dobSelect">
+							        <option>Month</option>
+							        <option value="1">Jan</option>
+							        <option value="2">Feb</option>
+							        <option value="3">Mar</option>
+							        <option value="4">Apr</option>
+							        <option value="5">May</option>
+							        <option value="6">Jun</option>
+							        <option value="7">Jul</option>
+							        <option value="8">Aug</option>
+							        <option value="9">Sept</option>
+							        <option value="10">Oct</option>
+							        <option value="11">Nov</option>
+							        <option value="12">Dec</option>
+							    </select> 
+							    <select name="dobDay" id="dobDay" class="dobSelect">
+							        <option>Day</option>
+							        <option value="1">1</option>
+							        <option value="2">2</option>
+							        <option value="3">3</option>
+							        <option value="4">4</option>
+							        <option value="5">5</option>
+							        <option value="6">6</option>
+							        <option value="7">7</option>
+							        <option value="8">8</option>
+							        <option value="9">9</option>
+							        <option value="10">10</option>
+							        <option value="11">11</option>
+							        <option value="12">12</option>
+							        <option value="13">13</option>
+							        <option value="14">14</option>
+							        <option value="15">15</option>
+							        <option value="16">16</option>
+							        <option value="17">17</option>
+							        <option value="18">18</option>
+							        <option value="19">19</option>
+							        <option value="20">20</option>
+							        <option value="21">21</option>
+							        <option value="22">22</option>
+							        <option value="23">23</option>
+							        <option value="24">24</option>
+							        <option value="25">25</option>
+							        <option value="26">26</option>
+							        <option value="27">27</option>
+							        <option value="28">28</option>
+							        <option value="29">29</option>
+							        <option value="30">30</option>
+							        <option value="31">31</option>
+							    </select> 
+							<select name="dobYear" id="dobYear" class="dobSelect">
+							    <option>Year</option>
+							    <option value="2011">2011</option>
+							    <option value="2010">2010</option>
+							    <option value="2009">2009</option>
+							    <option value="2008">2008</option>
+							    <option value="2007">2007</option>
+							    <option value="2006">2006</option>
+							    <option value="2005">2005</option>
+							    <option value="2004">2004</option>
+							    <option value="2003">2003</option>
+							    <option value="2002">2002</option>
+							    <option value="2001">2001</option>
+							    <option value="2000">2000</option>
+							    <option value="1999">1999</option>
+							    <option value="1998">1998</option>
+							    <option value="1997">1997</option>
+							    <option value="1996">1996</option>
+							    <option value="1995">1995</option>
+							    <option value="1994">1994</option>
+							    <option value="1993">1993</option>
+							    <option value="1992">1992</option>
+							   </select>
+							</p>
+							<p>
+								<label>Photo</label>
+								<input type="file" name="childPhoto" id="childPhoto">
+							</p>
+							<hr>
+							<p>
+								<label>Approved Guardians</label>
+								<input type="text" name="guardian1" id="guardian1" class="input-text">
+								<!-- Need to hide the following unless user chooses to add more -->
+								<input type="text" name="guardian2" id="guardian2" class="input-text">
+								<input type="text" name="guardian3" id="guardian3" class="input-text">
+								<input type="text" name="guardian4" id="guardian4" class="input-text">
+
+							</p>
+							<hr>
+							<p>
+								<label>Allergies</label>
+								<input type="radio" name="allergies" value="Yes" id="yesAllergies" class="show" checked> Yes
+								<input type="radio" name="allergies" value="No" class="show"> No
+								<textarea class="toggle"></textarea>
+							</p>
+							<p>
+								<label>Notes</label>
+								<textarea name="childNotes" id="childNotes"></textarea>
+							</p>
+							<button type="submit" class="nice black button radius">Register Child</button>
+						</form>
+				</div><!-- panel -->
+				<a href="#top" class="nice black button radius small right scroll">Menu</a>
+			</div> <!-- six columns -->
+		</div><!-- row -->
+	</div><!-- end container -->
+
+	<div class="container" id="addGuardian">
+		<div class="row">
+			<div class="six columns centered">
+				<h2>Register Guardian</h2>
+				<div class="panel">
+					<form action="#" id="addGuardianForm" class="nice">
+						<p>
+							<label>First Name</label>
+							<input type="text" name="first-name-guardian" id="first-name-guardian" class="input-text">
+						</p>
+						<p>
+							<label>Last Name</label>
+							<input type="text" name="last-name-guardian" id="last-name-guardian" class="input-text">
+						</p>
+						<p>
+							<label>Phone</label>
+							<input type="text" name="guardian-phone" id="guardian-phone" class="input-text">
+						</p>
+						<p>
+							<label>Would you like to receive SMS text updates?</label> <!-- Add a tool tip -->
+							<input type="radio" name="sms" id="sms_yes" value="Yes" class="show" checked>Yes
+							<input type="radio" name="sms" id="sms_no" class="show" value="No">No
+							<label>Please Select Carrier:</label>
+							<select id="carrier" name="carrier" class="toggle">
+								<option value="@txt.att.net">AT&amp;T</option>
+								<option value="@messaging.sprintpcs.com">Sprint</option>
+								<option value="@tmomail.net">T-Mobile</option>
+								<option value="@email.uscc.net">U.S. Cellular</option>
+								<option value="@vtext.com">Verizon</option>
+							</select>
+						</p>
+						<p>
+							<label>Email</label><!-- Add tool Tip -->
+							<input type="text" name="guardian-email" id="guardian-email" class="input-text">
+						</p>
+						<p>
+							<label>Child(ren)</label>
+							<input type="text" name="child1" id="child1" class="input-text">
+							<!-- Need to hide the following unless user chooses to add more -->
+							<input type="text" name="child2" id="child2" class="input-text">
+							<input type="text" name="child3" id="child3" class="input-text">
+							<input type="text" name="child4" id="child4" class="input-text">
+						</p>
+						<button type="submit" class="nice black button radius">Register Guardian</button>
+					</form>
+				</div>
+				<a href="#top" class="nice black button radius small scroll right">Menu</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container" id="footer">
+		<div class="row">
+			
+			<div class="six columns" id="">
+				<h3>Simple Check In Procedure</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</div> <!-- End  -->
+	
+	
+			<div class="six columns" id="footerAdmin">
+					<h3>Admin</h3>
+					<a href="#" class="nice white button radius">Login</a>
+			</div> <!-- End footerAdmin -->
+		</div><!-- End row -->
+		<div class="row" id="copyright">
+			<div class="six columns centered">
+				<p>Copyright <a href="http://www.bryanrankin.com">Bryan Rankin</a></p>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!-- Included JS Files -->
+	<script src="javascripts/jquery.min.js"></script>
+	<script src="javascripts/modernizr.foundation.js"></script>
+	<script src="javascripts/foundation.js"></script>
+	<script src="javascripts/app.js"></script>
+
+</body>
+</html>
