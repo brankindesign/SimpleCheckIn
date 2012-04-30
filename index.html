@@ -30,6 +30,9 @@
 </head>
 <body>
 <a id="top"></a>
+
+<!-- DO we want to use handlebarsJS to handle templating? If so place the templates here. -->
+
 	<div class="container" id="header">
 		<div class="row">
 			<div class="four columns">
@@ -55,22 +58,15 @@
 				<form action="#" id="checkInForm" class="nice">
 					<p>
 						<label>Child</label>
-						<select>
-							<option value="Child 1">Child 1</option>
-							<option value="Child 2">Child 2</option>
-							<option value="Child 3">Child 3</option>
-							<option value="Child 4">Child 4</option>
+						<select id="childCheckInList">
+							
 						</select>
-						<ul id="children">
-						</ul>
+						
 					</p>
 					<p>
 						<label>Guardian</label>
-						<select id="guardianSelect">
-							<option value="Parent 1">Parent 1</option>
-							<option value="Parent 2">Parent 2</option>
-							<option value="Parent 3">Parent 3</option>
-							<option value="other">Other</option>
+						<select id="guardianCheckInList">
+							<!-- <option value="other">Other</option> -->
 						</select>
 						<div id="otherGuardian">
 							<label>Other Guardian</label>
@@ -80,7 +76,7 @@
 					</p>
 
 					
-					<button type="submit" class="nice black button radius">Check In</button>
+					<button type="submit" class="nice black button radius" id="checkInBtn">Check In</button>
 				</form>
 				</div><!-- end panel -->
 				<a href="#top" class="nice black button radius small right scroll">Menu</a>
@@ -98,7 +94,7 @@
 					<form action="#" id="checkOutForm" class="nice">
 						<p>
 						<label>Child</label>
-						<select>
+						<select id="">
 							<option value="Child 1">Child 1</option>
 							<option value="Child 2">Child 2</option>
 							<option value="Child 3">Child 3</option>
@@ -107,7 +103,7 @@
 					</p>
 					<p>
 						<label>Guardian</label>
-						<select>
+						<select id="">
 							<option value="Parent 1">Parent 1</option>
 							<option value="Parent 2">Parent 2</option>
 							<option value="Parent 3">Parent 3</option>
@@ -237,7 +233,9 @@
 								<label>Notes</label>
 								<textarea name="childNotes" id="childNotes"></textarea>
 							</p>
-							<button type="submit" class="nice black button radius">Register Child</button>
+
+							<input type="hidden" name="active" value="TRUE">
+							<button type="submit" class="nice black button radius" id="addChildBtn">Register Child</button>
 						</form>
 				</div><!-- panel -->
 				<a href="#top" class="nice black button radius small right scroll">Menu</a>
@@ -320,6 +318,12 @@
 				<p>Copyright <a href="http://www.bryanrankin.com">Bryan Rankin</a></p>
 			</div>
 		</div>
+	</div>
+
+	<div class="info">
+		<ul id="people">
+			
+		</ul>
 	</div>
 
 

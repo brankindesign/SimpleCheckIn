@@ -1,188 +1,148 @@
 <?php
+/**
+ * Step 1: Require the Slim PHP 5 Framework
+ *
+ * If using the default file layout, the `Slim/` directory
+ * will already be on your include path. If you move the `Slim/`
+ * directory elsewhere, ensure that it is added to your include path
+ * or update this file path as needed.
+ */
 require 'Slim/Slim.php';
 
+/**
+ * Step 2: Instantiate the Slim application
+ *
+ * Here we instantiate the Slim application with its default settings.
+ * However, we could also pass a key-value array of settings.
+ * Refer to the online documentation for available settings.
+ */
 $app = new Slim();
+$app->add(new Slim_Middleware_ContentTypes());
 
-$app->get('/children', 'getChildren');
-$app->get('/children/:id','getChild');
-$app->get('/guardians','getGuardians');
-$app->get('/guardians/:id','getGuardian');
-$app->post('/children','addChild');
-$app->post('/guardians','addGuardian');
-$app->put('/children/:id','updateChild');
-$app->put('/guardians/:id','updateGuardian');
-$app->post('/attendance','checkin');
-$app->put('/attendance','checkout');
+/**
+ * Step 3: Define the Slim application routes
+ *
+ * Here we define several Slim application routes that respond
+ * to appropriate HTTP request methods. In this example, the second
+ * argument for `Slim::get`, `Slim::post`, `Slim::put`, and `Slim::delete`
+ * is an anonymous function. If you are using PHP < 5.3, the
+ * second argument should be any variable that returns `true` for
+ * `is_callable()`. An example GET route for PHP < 5.3 is:
+ *
+ * $app = new Slim();
+ * $app->get('/hello/:name', 'myFunction');
+ * function myFunction($name) { echo "Hello, $name"; }
+ *
+ * The routes below work with PHP >= 5.3.
+ */
 
+//GET all the children when page loads
+$app->get('/children', function () {
+    //Get all children from DB
+    $sql = "SELECT * FROM child";
+    try {
+        $db = getConnection();
+        $stmt = $db->query($sql);  
+        $children = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        //echo json_encode($people);
+        echo json_encode($children);
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+    }
+});
+
+
+//GET all the guardians when page loads
+$app->get('/guardian', function () {
+    //Get all children from DB
+    $sql = "SELECT * FROM guardian";
+    try {
+        $db = getConnection();
+        $stmt = $db->query($sql);  
+        $guardians = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        //echo json_encode($people);
+        echo json_encode($guardians);
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+    }
+});
+
+
+//POST route for checkin
+$app->post('/checkin', function () {
+    
+    //Set current date and time
+    $today = date("F j, Y");
+    $time = date("g:i a");
+    
+    //Is this a POST request?
+    $q = Slim::getInstance()->request()->isPost(); //true or false
+
+    $request = Slim::getInstance()->request()->getBody();
+    
+    $sql = "    INSERT INTO attendance (child, guardian_in, date_in, time_in) 
+                    VALUES (:child, :guardian, :date_in, :time_in)";
+        try {
+            $db = getConnection();
+            $stmt = $db->prepare($sql);  
+            $stmt->bindParam("child", $request->child);
+            $stmt->bindParam("guardian", $request->guardian);
+            $stmt->bindParam("date_in", $today);
+            $stmt->bindParam("time_in", $time);
+            $stmt->execute();
+            //$checkIn->id = $db->lastInsertId();
+            //$db = null;
+            //echo ($checkin); 
+        } catch(PDOException $e) {
+            error_log($e->getMessage(), 3, '/var/tmp/php.log');
+            echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+        }
+
+});
+
+//Basic POST route
+$app->post('/post', function(){
+    $q = Slim::getInstance()->request()->isAjax();
+
+    //Get the Request root URI
+    $rootUri = Slim::getInstance()->request()->getRootUri();
+
+    //Get the Request resource URI
+    $resourceUri = Slim::getInstance()->request()->getResourceUri();
+
+    //Get the Request resource URI
+    $body = json_decode(Slim::getInstance()->request()->getBody());
+
+    echo $q . ' | RootURI: ' . $rootUri . ' | ResourceURi' . $resourceUri . ' | Body' . $body;
+});
+
+//PUT route
+$app->put('/put', function () {
+    echo 'This is a PUT route';
+});
+
+//DELETE route
+$app->delete('/delete', function () {
+    echo 'This is a DELETE route';
+});
+
+/**
+ * Step 4: Run the Slim application
+ *
+ * This method should be called last. This is responsible for executing
+ * the Slim application using the settings and routes defined above.
+ */
 $app->run();
 
-function getChildren(){
-	$sql = "select * FROM child ORDER BY last_name";
-	try {
-		$db = getConnection();
-		$stmt = $db->query($sql);  
-		$children = $stmt->fetchAll(PDO::FETCH_OBJ);
-		$db = null;
-		echo '{"children": ' . json_encode($children) . '}';
-	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-	}
-}
 
-function getChild($id){
-	$sql = "";
-}
-function getGuardians(){
-	$sql = "";
-}
-function getGuardian($id){
-	$sql = "";
-}
-function addChild(){
-	$sql = "";
-}
-function addGuardian(){
-	$sql = "";
-}
-function updateChild($id){
-	$sql = "";
-}
-function updateGuardian($id){
-	$sql = "";
-}
-function checkin(){
-	$sql = "";
-}
-function checkout($id){
-	$sql = "";
-}
-
-
-
-
-
-/*
-$app->get('/wines', 'getWines');
-$app->get('/wines/:id',	'getWine');
-$app->get('/wines/search/:query', 'findByName');
-$app->post('/wines', 'addWine');
-$app->put('/wines/:id', 'updateWine');
-$app->delete('/wines/:id',	'deleteWine');
-
-$app->run();
-
-function getWines() {
-	$sql = "select * FROM wine ORDER BY name";
-	try {
-		$db = getConnection();
-		$stmt = $db->query($sql);  
-		$wines = $stmt->fetchAll(PDO::FETCH_OBJ);
-		$db = null;
-		echo '{"wine": ' . json_encode($wines) . '}';
-	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-	}
-}
-
-function getWine($id) {
-	$sql = "SELECT * FROM wine WHERE id=:id";
-	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);  
-		$stmt->bindParam("id", $id);
-		$stmt->execute();
-		$wine = $stmt->fetchObject();  
-		$db = null;
-		echo json_encode($wine); 
-	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-	}
-}
-
-function addWine() {
-	error_log('addWine\n', 3, '/var/tmp/php.log');
-	$request = Slim::getInstance()->request();
-	$wine = json_decode($request->getBody());
-	$sql = "INSERT INTO wine (name, grapes, country, region, year, description) VALUES (:name, :grapes, :country, :region, :year, :description)";
-	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);  
-		$stmt->bindParam("name", $wine->name);
-		$stmt->bindParam("grapes", $wine->grapes);
-		$stmt->bindParam("country", $wine->country);
-		$stmt->bindParam("region", $wine->region);
-		$stmt->bindParam("year", $wine->year);
-		$stmt->bindParam("description", $wine->description);
-		$stmt->execute();
-		$wine->id = $db->lastInsertId();
-		$db = null;
-		echo json_encode($wine); 
-	} catch(PDOException $e) {
-		error_log($e->getMessage(), 3, '/var/tmp/php.log');
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-	}
-}
-
-function updateWine($id) {
-	$request = Slim::getInstance()->request();
-	$body = $request->getBody();
-	$wine = json_decode($body);
-	$sql = "UPDATE wine SET name=:name, grapes=:grapes, country=:country, region=:region, year=:year, description=:description WHERE id=:id";
-	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);  
-		$stmt->bindParam("name", $wine->name);
-		$stmt->bindParam("grapes", $wine->grapes);
-		$stmt->bindParam("country", $wine->country);
-		$stmt->bindParam("region", $wine->region);
-		$stmt->bindParam("year", $wine->year);
-		$stmt->bindParam("description", $wine->description);
-		$stmt->bindParam("id", $id);
-		$stmt->execute();
-		$db = null;
-		echo json_encode($wine); 
-	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-	}
-}
-
-function deleteWine($id) {
-	$sql = "DELETE FROM wine WHERE id=:id";
-	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);  
-		$stmt->bindParam("id", $id);
-		$stmt->execute();
-		$db = null;
-	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-	}
-}
-
-function findByName($query) {
-	$sql = "SELECT * FROM wine WHERE UPPER(name) LIKE :query ORDER BY name";
-	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);
-		$query = "%".$query."%";  
-		$stmt->bindParam("query", $query);
-		$stmt->execute();
-		$wines = $stmt->fetchAll(PDO::FETCH_OBJ);
-		$db = null;
-		echo '{"wine": ' . json_encode($wines) . '}';
-	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-	}
-}
-*/
 function getConnection() {
-	$dbhost="localhost";
-	$dbuser="root";
-	$dbpass="";
-	$dbname="checkin";
-	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);	
-	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	return $dbh;
+    $dbhost="localhost";
+    $dbuser="root";
+    $dbpass="";
+    $dbname="checkin";
+    $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);  
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $dbh;
 }
-
-?>

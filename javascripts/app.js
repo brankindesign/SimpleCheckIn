@@ -52,7 +52,7 @@ jQuery(document).ready(function ($) {
   });	 
 
   //Show other guardian input in check in area
-    $("#guardianSelect").change(function(){
+    $("#guardianCheckInList").change(function(){
 		var gs = $(this).val();
 		if (gs === 'other'){
 			$('#otherGuardian').slideToggle();
@@ -67,38 +67,99 @@ jQuery(document).ready(function ($) {
     	$(this).siblings('.toggle').slideToggle($(this).val());
 	});
 
-  	//Set up checkin app
-  	var childURL = "http://checkin/api/children";
-  	var guardURL = "http://checkin/api/guardian";
-  	var attURL = "http://checkin/api/attendance";
 
-  	var currentChild;
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+  	//Set up checkin app routes
+  	var childURL = "http://localhost/checkin/api/children";
+  	var guardURL = "http://localhost/checkin/api/guardian";
+  	var checkInURL = "http://localhost/checkin/api/checkin";
+  	var checkOutURL = "http://localhost/checkin/api/checkout";
+
 
   	//Retrieve Children when app is loaded
-  	findAllChildren();
+  	getAllChildren();
   	//Retrieve Guardians when app is loaded
-  	//findAllGuardians();
+  	getAllGuardians();
   	//Retrieve all checked in
-  	//findAllAttendance();
+  	//getAllAttendance();
 
-  	function findAllChildren(){
-  		console.log('findAll');
-  			$.ajax({
-			type: 'GET',
-			url: childURL,
-			dataType: "json", // data type of response
-			success: renderListChild
+  	function getAllChildren(){
+  		$.ajax({
+			url:childURL, //Generic slim call
+			dataType: 'json',
+			success: function(children){
+				$.each(children, function(i, child){
+					var fullName = child.first_name +' ' + child.last_name;
+					$('#childCheckInList').append('<option value="' + fullName + '">' + fullName + '</option>');
+				});
+			}
 		});
   	}
 
-  	function renderListChild(data) {
-		// JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-		var list = data == null ? [] : (data.children instanceof Array ? data.children : [data.children]);
 
-		//$('#wineList li').remove();
-		$.each(list, function(index, children) {
-			$('ul#children').append('<li><a href="#" data-identity="' + children.id + '">'+children.first_name+'</a></li>');
+  	function getAllGuardians(){
+  		$.ajax({
+			url:guardURL, //Generic slim call
+			dataType: 'json',
+			success: function(guardians){
+				
+				//For each person create li
+				$.each(guardians, function(i, guardian){
+					var fullName = guardian.first_name +' ' + guardian.last_name;
+					$('#guardianCheckInList').append('<option value="' + fullName +'" >' + fullName + '</option>');
+				});
+				$('#guardianCheckInList').append('<option value="other">Other</option>');
+
+			}
 		});
+  	}
+
+  	$('#checkInForm').on('submit', function(e){
+  		e.preventDefault();
+  		checkIn();
+  	});
+
+  	function checkIn(){
+  		//var a = checkInToJSON();
+		//console.log(a);
+		$.ajax({
+			url: "http://localhost/checkin/api/post",
+			type: 'POST',
+			data: checkInToJSON(),
+			dataType: 'json',
+			success: function(data){
+				console.log(data);
+				$('body').append('<div class="container">' + data + '</div>');
+
+				//console.log("Checked In! " + data);
+			}
+		});
+
+		/*
+			success: function(data){
+				console.log("Checked In! " + data);
+			},
+			error: function(){
+				console.log("Sorry that failed.");
+			}
+		
+		});
+*/
 	}
+
+
+	function checkInToJSON() {
+		return JSON.stringify({
+			"child": $('#childCheckInList').val(), 
+			"guardian": $('#guardianCheckInList').val(),
+			});
+	}
+
 
 });

@@ -7,6 +7,8 @@ We created this to help small churches and other organizations put into place a 
 
 ***
 
+Built using:
+Slim Micro Framework - 
 
 Front end built on Zurb's Foundation so it will work for any screen size.
 
