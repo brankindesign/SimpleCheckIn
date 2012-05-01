@@ -51,17 +51,6 @@ jQuery(document).ready(function ($) {
   	$('html,body').animate({scrollTop:$(this.hash).offset().top}, 600);
   });	 
 
-  //Show other guardian input in check in area
-    $("#guardianCheckInList").change(function(){
-		var gs = $(this).val();
-		if (gs === 'other'){
-			$('#otherGuardian').slideToggle();
-		}
-		else{
-			$('#otherGuardian').slideUp();
-		}
-  	});
-
   //Radio Toggle
   	$('.show').on('change',function() {
     	$(this).siblings('.toggle').slideToggle($(this).val());
@@ -73,7 +62,28 @@ jQuery(document).ready(function ($) {
 
 
 //////////////////////////////////////////////////////////////////////////////
+//.......................
+//	Table of Contents
+//.......................
+//	:: Set up routes
+//	:: Retrieve initial data for app
+//	:: Functions for retreiving data
+//		:: getAllChildren
+//		:: getAllGuardians
+	// Need to add getAllAttendance
 
+//	:: Check in a Child
+//	:: Register a Child
+	// Need to add
+	//	- Register a guardian
+	//	- Check out a child
+
+//	:: Helper Functions
+	//	:: clearForm
+	//	:: checkInToJSON
+	//	:: registerChildToJSON
+//.......................
+//////////////////////////////////////////////////////////////////////////////
 
   	//Set up checkin app routes
   	var childURL = "http://localhost/checkin/api/children";
@@ -82,18 +92,20 @@ jQuery(document).ready(function ($) {
   	var checkOutURL = "http://localhost/checkin/api/checkout";
 
 
-  	//Retrieve Children when app is loaded
-  	getAllChildren();
-  	//Retrieve Guardians when app is loaded
-  	getAllGuardians();
-  	//Retrieve all checked in
-  	//getAllAttendance();
+  	// Retrieve initial data
+	  	//Retrieve Children when app is loaded
+	  	getAllChildren();
+	  	//Retrieve Guardians when app is loaded
+	  	getAllGuardians();
+	  	//Retrieve all checked in
+	  	//getAllAttendance();
 
   	function getAllChildren(){
   		$.ajax({
-			url:childURL, //Generic slim call
+			url:childURL, 
 			dataType: 'json',
 			success: function(children){
+				//For each child create an <option>
 				$.each(children, function(i, child){
 					var fullName = child.first_name +' ' + child.last_name;
 					$('#childCheckInList').append('<option value="' + fullName + '">' + fullName + '</option>');
@@ -105,20 +117,33 @@ jQuery(document).ready(function ($) {
 
   	function getAllGuardians(){
   		$.ajax({
-			url:guardURL, //Generic slim call
+			url:guardURL,
 			dataType: 'json',
 			success: function(guardians){
 				
-				//For each person create li
+				//For each guardian create an <option>
 				$.each(guardians, function(i, guardian){
 					var fullName = guardian.first_name +' ' + guardian.last_name;
 					$('#guardianCheckInList').append('<option value="' + fullName +'" >' + fullName + '</option>');
 				});
+				//Add an <option> that is other
 				$('#guardianCheckInList').append('<option value="other">Other</option>');
 
 			}
 		});
   	}
+
+//	Check in a child 			
+	//Show other guardian input in check in area
+    $("#guardianCheckInList").change(function(){
+		var gs = $(this).val();
+		if (gs === 'other'){
+			$('#otherGuardian').slideToggle();
+		}
+		else{
+			$('#otherGuardian').slideUp();
+		}
+  	});
 
   	$('#checkInForm').on('submit', function(e){
   		e.preventDefault();
@@ -126,28 +151,53 @@ jQuery(document).ready(function ($) {
   	});
 
   	function checkIn(){
-  		//var a = checkInToJSON();
-		//console.log(a);
-		$.ajax({
+  		$.ajax({
 			url: checkInURL,
 			type: 'POST',
 			data: checkInToJSON(),
 			//dataType: 'json',
 			success: function(data){
-				alert(data);
+				$('#checkInConfirmChild').append(data);
+				$('#checkInConfirm').reveal();
+				clearForm();
 			}
 		});
+	}
 
-		/*
+//Register a child
+	$('#addChildForm').on('submit', function(e){
+  		e.preventDefault();
+  		registerChild();
+  	});
+
+	function registerChild(){
+  		//var a = registerChildToJSON();
+		//console.log(a);
+		$.ajax({
+			url: childURL,
+			type: 'POST',
+			data: registerChildToJSON(),
+			//dataType: 'json',
 			success: function(data){
-				console.log("Checked In! " + data);
-			},
-			error: function(){
-				console.log("Sorry that failed.");
+				//alert(data)
+				$('#registerConfirmChild').append(data);
+				$('#registerConfirm').reveal();
+				clearForm();
 			}
-		
 		});
-*/
+	}
+
+// Helper Functions
+	function clearForm(){
+		$('form').find(':input').each(function(){
+			var type = this.type, tag = this.tagName.toLowerCase();
+			if (type == 'text' || type == 'password' || tag == 'textarea')
+				this.value = '';
+			else if (type == 'checkbox' || type == 'radio')
+				this.checked = false;
+			else if (tag == 'select')
+				this.selectedIndex = -1;
+		})
 	}
 
 
@@ -158,5 +208,21 @@ jQuery(document).ready(function ($) {
 			});
 	}
 
+	function registerChildToJSON(){
+		return JSON.stringify({
+			"first_name": $('#first-name-child').val(),
+		    "last_name": $('#last-name-child').val(),
+		    "active": $('#active').val(),
+		    "category": "Child",
+		    "birthday": $('#dobMonth').val() + '/' + $('#dobDay').val() + '/' + $('#dobYear').val(),
+		    "allergies":$('#allergyNotes').val(),
+		    "notes": $('#childNotes').val(),
+		    "photo": $('#childPhoto').val(),
+		    "guardian1": $('#guardian1').val(),
+		    "guardian2": $('#guardian2').val(),
+		    "guardian3": $('#guardian3').val(),
+		    "guardian4": $('#guardian4').val()
+		});
+	}
 
 });

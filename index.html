@@ -45,6 +45,7 @@
 	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 	</p>
+	<a class="close-reveal-modal">&#215;</a>
 </div>
 
 	<div class="container" id="header">
@@ -73,13 +74,14 @@
 					<p>
 						<label>Child</label>
 						<select id="childCheckInList">
-							
+							<option value=""></option>
 						</select>
 						
 					</p>
 					<p>
 						<label>Guardian</label>
 						<select id="guardianCheckInList">
+							<option value=""></option>
 							<!-- <option value="other">Other</option> -->
 						</select>
 						<div id="otherGuardian">
@@ -239,16 +241,14 @@
 							<hr>
 							<p>
 								<label>Allergies</label>
-								<input type="radio" name="allergies" value="Yes" id="yesAllergies" class="show" checked> Yes
-								<input type="radio" name="allergies" value="No" class="show"> No
-								<textarea class="toggle"></textarea>
+								<textarea name="allergyNotes" id="allergyNotes"></textarea>
 							</p>
 							<p>
 								<label>Notes</label>
 								<textarea name="childNotes" id="childNotes"></textarea>
 							</p>
 
-							<input type="hidden" name="active" value="TRUE">
+							<input type="hidden" name="active" id="active" value="TRUE">
 							<button type="submit" class="nice black button radius" id="addChildBtn">Register Child</button>
 						</form>
 				</div><!-- panel -->
@@ -340,7 +340,18 @@
 		</ul>
 	</div>
 
+<!-- REVEAL MODALS -->
+<div id="checkInConfirm" class="reveal-modal">
+	<h2>Thank you for checking in <span id="checkInConfirmChild"></span></h2>
+	<button class="nice black radius button close-reveal-modal">close</button>
+	<a class="close-reveal-modal">&#215;</a>
+</div>
 
+<div id="registerConfirm" class="reveal-modal">
+	<h2>Thank you for registering <span id="registerConfirmChild"></span></h2>
+	<button class="nice black radius button close-reveal-modal">Go to Check In</button>
+	<a class="close-reveal-modal">&#215;</a>
+</div>
 
 
 	<!-- Included JS Files -->

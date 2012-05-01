@@ -16,7 +16,8 @@ Notes:
 Built using:
 Slim Micro Framework - 
 
-Front end built on Zurb's Foundation so it will work for any screen size.
+
+Front end built on Zurb's Foundation so it will work for any screen size and jQuery for handling form data and visuals.
 
 You can install it on a server or run it on a local machine using a LAMP, MAMP or WAMP stack.
 *Will be adding the SQL structure file soon*

@@ -72,19 +72,20 @@ $app->get('/guardian', function () {
 });
 
 
-//Basic POST route
+//Check in a Child
 $app->post('/checkin', function() use ($app) {
-    //$app->add(new Slim_Middleware_ContentTypes());
+    //Set current date and time
     $today = date("F j, Y");
     $time = date("g:i a");
-    $child = "Child 1";
-    $guardian = "Guardian 1";
-    //$app->contentType('application/json');
-    //Get the Request resource URI
+    
+    //Get the form data
     $body = json_decode($app->request()->getBody());
+    
+    //Set child and guardian
     $child = $body->child;
     $guardian = $body->guardian;
 
+    //Set up the sql statements and injection
     $sql = "INSERT INTO attendance (child, guardian_in, date_in, time_in) 
             VALUES (:child, :guardian, :date_in, :time_in)";
         try {
@@ -101,8 +102,62 @@ $app->post('/checkin', function() use ($app) {
             echo '{"error":{"text":'. $e->getMessage() .'}}'; 
         }    
 
-    echo $child .' has been checked in by '. $guardian;
+    echo $child;
+    
+
 });
+
+//Register a Child
+$app->post('/children', function() use ($app) {
+    $body = json_decode($app->request()->getBody());
+    
+    $first_name = $body->first_name;
+    $last_name = $body->last_name;
+    $active = $body->active;
+    $category = $body->category;
+    $birthday = $body->birthday;
+    $allergies = $body->allergies;
+    $notes = $body->notes;
+    $photo = $body->photo;
+    $guardian1 = $body->guardian1;
+    $guardian2 = $body->guardian2;
+    $guardian3 = $body->guardian3;
+    $guardian4 = $body->guardian4;
+
+    $sql = "INSERT INTO child (first_name, last_name, active, category, birthday, notes, allergies, guardian1, guardian2, guardian3, guardian4)
+            VALUES (:first_name, :last_name, :active, :category, :birthday, :notes, :allergies, :guardian1, :guardian2, :guardian3, :guardian4)";
+
+/*
+    $sql = "INSERT INTO child (first_name, last_name, active, category, birthday, allergies, notes, photo, guardian1, guardian2, guardian3, guardian4)
+            VALUES (:first_name, :last_name, :active, :category, :birthday, :allergies, :notes, :photo, :guardian1, :guardian2, :guardian3, :guardian4)";
+*/
+        try {
+            $db = getConnection();
+            $stmt = $db->prepare($sql);  
+            $stmt->bindParam("first_name", $first_name);
+            $stmt->bindParam("last_name", $last_name);
+            $stmt->bindParam("active", $active);
+            $stmt->bindParam("category", $category);
+            $stmt->bindParam("birthday", $birthday);
+            $stmt->bindParam("allergies", $allergies);
+            $stmt->bindParam("notes", $notes);
+//            $stmt->bindParam("photo", $photo);
+            $stmt->bindParam("guardian1", $guardian1);
+            $stmt->bindParam("guardian2", $guardian2);
+            $stmt->bindParam("guardian3", $guardian3);
+            $stmt->bindParam("guardian4", $guardian4);
+        
+            $stmt->execute();
+            
+        } catch(PDOException $e) {
+            error_log($e->getMessage(), 3, '/var/tmp/php.log');
+            echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+        }    
+        echo $first_name . ' ' . $last_name;
+});
+
+
+
 
 //PUT route
 $app->put('/put', function () {
