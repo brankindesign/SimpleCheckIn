@@ -88,6 +88,7 @@ jQuery(document).ready(function ($) {
   	//Set up checkin app routes
   	var childURL = "http://localhost/checkin/api/children";
   	var guardURL = "http://localhost/checkin/api/guardian";
+  	var attendURL = "http://localhost/checkin/api/attendance";
   	var checkInURL = "http://localhost/checkin/api/checkin";
   	var checkOutURL = "http://localhost/checkin/api/checkout";
 
@@ -98,7 +99,7 @@ jQuery(document).ready(function ($) {
 	  	//Retrieve Guardians when app is loaded
 	  	getAllGuardians();
 	  	//Retrieve all checked in
-	  	//getAllAttendance();
+	  	getAllAttendance();
 
   	function getAllChildren(){
   		$.ajax({
@@ -133,6 +134,23 @@ jQuery(document).ready(function ($) {
 		});
   	}
 
+  	function getAllAttendance(){
+  		$.ajax({
+			url:attendURL, 
+			dataType: 'json',
+			success: function(children){
+				//alert(children);
+				$('#childrenPresent').html('');
+				//For each child create an <option>
+				$.each(children, function(i, child){
+					console.log(child.child);
+					$('#childrenPresent').append('<li><input type="radio" name="checkOutChild" value="' + child.child + '" data-checkOutChild="child">' + child.child + '</li>')
+					//$('#childCheckInList').append('<option value="' + child.child + '">' + child.child + '</option>');
+				});
+			}
+		});
+  	}
+
 //	Check in a child 			
 	//Show other guardian input in check in area
     $("#guardianCheckInList").change(function(){
@@ -157,9 +175,10 @@ jQuery(document).ready(function ($) {
 			data: checkInToJSON(),
 			//dataType: 'json',
 			success: function(data){
-				$('#checkInConfirmChild').append(data);
+				$('#checkInConfirmChild').html(data);
 				$('#checkInConfirm').reveal();
 				clearForm();
+				getAllAttendance();
 			}
 		});
 	}
@@ -180,12 +199,26 @@ jQuery(document).ready(function ($) {
 			//dataType: 'json',
 			success: function(data){
 				//alert(data)
-				$('#registerConfirmChild').append(data);
+				$('#registerConfirmChild').html(data);
 				$('#registerConfirm').reveal();
 				clearForm();
 			}
 		});
 	}
+
+// Check out a child
+	$('#checkOutForm').on('submit', function(e){
+  		e.preventDefault();
+  		checkIn();
+  	});
+
+  	function checkOut()	{
+  		$.ajax({
+  			url: checkOutURL,
+  			type: 'POST'
+  		});
+
+  	}
 
 // Helper Functions
 	function clearForm(){
