@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * Step 1: Require the Slim PHP 5 Framework
  *
@@ -71,13 +69,34 @@ $app->get('/guardian', function () {
     }
 });
 
+//GET attendance when page loads
+$app->get('/attendance', function () {
+    //Set current date and time
+    $today = date("F j, Y");
+
+    //Get all children from DB
+    $sql = "SELECT * FROM attendance WHERE date_in='$today'";
+    try {
+        $db = getConnection();
+        $stmt = $db->prepare($sql);  
+        $stmt->bindParam("today", $today);
+        $stmt->execute();
+//        $stmt = $db->query($sql);  
+        $attendance = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        //echo json_encode($people);
+        echo json_encode($attendance);
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+    }
+});
 
 //Check in a Child
 $app->post('/checkin', function() use ($app) {
     //Set current date and time
     $today = date("F j, Y");
     $time = date("g:i a");
-    
+        
     //Get the form data
     $body = json_decode($app->request()->getBody());
     
@@ -101,10 +120,7 @@ $app->post('/checkin', function() use ($app) {
             error_log($e->getMessage(), 3, '/var/tmp/php.log');
             echo '{"error":{"text":'. $e->getMessage() .'}}'; 
         }    
-
     echo $child;
-    
-
 });
 
 //Register a Child
