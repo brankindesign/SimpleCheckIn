@@ -17,7 +17,34 @@ body{
 	background:url(../images/purty_wood.png) repeat;
 }
 
-
+#helpLink {
+	color:#fff;
+	width:130px;
+	height:50px;
+	line-height:50px;
+	text-align:center;
+	font-size:24px;
+	position: fixed;
+	left:-20px;
+	top:100px;
+	padding:10px 10px 10px 25px;
+	-webkit-border-top-right-radius: 20px;
+	-webkit-border-bottom-right-radius: 20px;
+	-moz-border-radius-topright: 20px;
+	-moz-border-radius-bottomright: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	background: -moz-linear-gradient(top, #ff0000 0%, #830000 80%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff0000), color-stop(80%,#830000));
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0000', endColorstr='#830000',GradientType=0 );
+	box-shadow:  inset  0 0 10px #222;
+	-webkit-box-shadow:  inset  0 0 10px #222;
+	-moz-box-shadow:  inset  0 0 10px #222;
+	border-top:1px solid #555;
+	border-right:1px solid #444;
+	border-bottom:1px solid #333;
+}
+#helpLink a{color:#fff}
 #header{
 	background:rgba(0,0,0,.6);
 	padding:10px 0;
