@@ -6,7 +6,13 @@ Simple browser based child check in system for tracking when a child is dropped 
 We created this to help small churches and other organizations put into place a simple check in / check out procedure to better protect their children.
 
 ***
+Installation:
 
+
+Notes:
+* Be sure to make sure your timezone is correctly set in your php.ini file or timestamps will be off.
+
+***
 Built using:
 Slim Micro Framework - 
 

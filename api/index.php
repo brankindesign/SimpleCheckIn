@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Step 1: Require the Slim PHP 5 Framework
  *
@@ -70,52 +72,36 @@ $app->get('/guardian', function () {
 });
 
 
-//POST route for checkin
-$app->post('/checkin', function () {
-    
-    //Set current date and time
+//Basic POST route
+$app->post('/checkin', function() use ($app) {
+    //$app->add(new Slim_Middleware_ContentTypes());
     $today = date("F j, Y");
     $time = date("g:i a");
-    
-    //Is this a POST request?
-    $q = Slim::getInstance()->request()->isPost(); //true or false
+    $child = "Child 1";
+    $guardian = "Guardian 1";
+    //$app->contentType('application/json');
+    //Get the Request resource URI
+    $body = json_decode($app->request()->getBody());
+    $child = $body->child;
+    $guardian = $body->guardian;
 
-    $request = Slim::getInstance()->request()->getBody();
-    
-    $sql = "    INSERT INTO attendance (child, guardian_in, date_in, time_in) 
-                    VALUES (:child, :guardian, :date_in, :time_in)";
+    $sql = "INSERT INTO attendance (child, guardian_in, date_in, time_in) 
+            VALUES (:child, :guardian, :date_in, :time_in)";
         try {
             $db = getConnection();
             $stmt = $db->prepare($sql);  
-            $stmt->bindParam("child", $request->child);
-            $stmt->bindParam("guardian", $request->guardian);
+            $stmt->bindParam("child", $child);
+            $stmt->bindParam("guardian", $guardian);
             $stmt->bindParam("date_in", $today);
             $stmt->bindParam("time_in", $time);
             $stmt->execute();
-            //$checkIn->id = $db->lastInsertId();
-            //$db = null;
-            //echo ($checkin); 
+            
         } catch(PDOException $e) {
             error_log($e->getMessage(), 3, '/var/tmp/php.log');
             echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-        }
+        }    
 
-});
-
-//Basic POST route
-$app->post('/post', function(){
-    $q = Slim::getInstance()->request()->isAjax();
-
-    //Get the Request root URI
-    $rootUri = Slim::getInstance()->request()->getRootUri();
-
-    //Get the Request resource URI
-    $resourceUri = Slim::getInstance()->request()->getResourceUri();
-
-    //Get the Request resource URI
-    $body = json_decode(Slim::getInstance()->request()->getBody());
-
-    echo $q . ' | RootURI: ' . $rootUri . ' | ResourceURi' . $resourceUri . ' | Body' . $body;
+    echo $child .' has been checked in by '. $guardian;
 });
 
 //PUT route

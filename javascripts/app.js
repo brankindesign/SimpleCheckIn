@@ -129,15 +129,12 @@ jQuery(document).ready(function ($) {
   		//var a = checkInToJSON();
 		//console.log(a);
 		$.ajax({
-			url: "http://localhost/checkin/api/post",
+			url: checkInURL,
 			type: 'POST',
 			data: checkInToJSON(),
-			dataType: 'json',
+			//dataType: 'json',
 			success: function(data){
-				console.log(data);
-				$('body').append('<div class="container">' + data + '</div>');
-
-				//console.log("Checked In! " + data);
+				alert(data);
 			}
 		});
 
