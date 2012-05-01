@@ -10,6 +10,7 @@ Installation:
 
 Database:
 *Simple Checkin was developed using a MySQL database. The 'checkin.sql' file will build your databse structure for you.*
+
 1.   Login to phpMyAdmin and create a new database called 'checkin'.
 2.   If you would like to import the sql structure go to the Import tab, browse your computer to where you saved Simple Checkin, the click 'Go'.
 3.   If you prefer to run the database structure from the sql prompt then open 'checkin.sql' in your favorite editor then copy and paste the sql code into the prompt.
