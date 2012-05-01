@@ -6,9 +6,10 @@ Simple browser based child check in system for tracking when a child is dropped 
 We created this to help small churches and other organizations put into place a simple check in / check out procedure to better protect their children.
 
 ***
-Installation:
+###Installation:
 
-Database:
+####Database:
+
 *Simple Checkin was developed using a MySQL database. The 'checkin.sql' file will build your databse structure for you.*
 
 1.   Login to phpMyAdmin and create a new database called 'checkin'.
