@@ -102,15 +102,18 @@ $app->post('/checkin', function() use ($app) {
     
     //Set child and guardian
     $child = $body->child;
+    $child_id = $body->child_id;
     $guardian = $body->guardian;
 
     //Set up the sql statements and injection
-    $sql = "INSERT INTO attendance (child, guardian_in, date_in, time_in) 
-            VALUES (:child, :guardian, :date_in, :time_in)";
+    
+    $sql = "INSERT INTO attendance (child, child_id, guardian_in, date_in, time_in) 
+            VALUES (:child, :child_id, :guardian, :date_in, :time_in)";
         try {
             $db = getConnection();
             $stmt = $db->prepare($sql);  
             $stmt->bindParam("child", $child);
+            $stmt->bindParam("child_id", $child_id);
             $stmt->bindParam("guardian", $guardian);
             $stmt->bindParam("date_in", $today);
             $stmt->bindParam("time_in", $time);
@@ -120,6 +123,7 @@ $app->post('/checkin', function() use ($app) {
             error_log($e->getMessage(), 3, '/var/tmp/php.log');
             echo '{"error":{"text":'. $e->getMessage() .'}}'; 
         }    
+    
     echo $child;
 });
 

@@ -87,6 +87,8 @@
 						<div id="otherGuardian">
 							<label>Other Guardian</label>
 							<input type="text" name="guardianIn" id="guardianIn" class="input-text">
+							or<br>
+							<a href="#addGuardian" class="nice black button radius">Register Guardian</a>
 						</div>
 						
 					</p>
@@ -119,12 +121,9 @@
 					</p>
 					<p>
 						<label>Guardian</label>
-						<select id="">
-							<option value="Parent 1">Parent 1</option>
-							<option value="Parent 2">Parent 2</option>
-							<option value="Parent 3">Parent 3</option>
-							<option value="Parent 4">Parent 4</option>
-						</select>
+						<ul class="block-grid two-up" id="allowedGuardians">
+							
+						</ul>
 					</p>
 					
 					<button type="submit" class="nice black button radius">Check Out</button>
@@ -342,14 +341,20 @@
 
 <!-- REVEAL MODALS -->
 <div id="checkInConfirm" class="reveal-modal">
-	<h2>Thank you for checking in <span id="checkInConfirmChild"></span></h2>
+	<h2>
+		Thank you for checking in <br>
+		<span id="checkInConfirmChild"></span>
+	</h2>
 	<button class="nice black radius button close-reveal-modal">close</button>
 	<a class="close-reveal-modal">&#215;</a>
 </div>
 
 <div id="registerConfirm" class="reveal-modal">
-	<h2>Thank you for registering <span id="registerConfirmChild"></span></h2>
-	<button class="nice black radius button close-reveal-modal">Go to Check In</button>
+	<h2>
+		Thank you for registering<br>
+		<span id="registerConfirmChild"></span>
+	</h2>
+	<button class="nice black radius button close-reveal-modal">close</button>
 	<a class="close-reveal-modal">&#215;</a>
 </div>
 

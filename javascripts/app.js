@@ -109,7 +109,7 @@ jQuery(document).ready(function ($) {
 				//For each child create an <option>
 				$.each(children, function(i, child){
 					var fullName = child.first_name +' ' + child.last_name;
-					$('#childCheckInList').append('<option value="' + fullName + '">' + fullName + '</option>');
+					$('#childCheckInList').append('<option value="' + fullName + '|' + child.id + '">' + fullName + '</option>');
 				});
 			}
 		});
@@ -143,12 +143,16 @@ jQuery(document).ready(function ($) {
 				$('#childrenPresent').html('');
 				//For each child create an <option>
 				$.each(children, function(i, child){
-					console.log(child.child);
+					//console.log(child.child);
 					$('#childrenPresent').append('<li><input type="radio" name="checkOutChild" value="' + child.child + '" data-checkOutChild="child">' + child.child + '</li>')
 					//$('#childCheckInList').append('<option value="' + child.child + '">' + child.child + '</option>');
 				});
 			}
 		});
+  	}
+
+  	function allowedGuardians(){
+
   	}
 
 //	Check in a child 			
@@ -235,8 +239,14 @@ jQuery(document).ready(function ($) {
 
 
 	function checkInToJSON() {
+		var val = $('#childCheckInList').val(); //Get value of child option
+		var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
+		var name = array[0]; //Set name
+		var id = array[1];	//Set id
+		
 		return JSON.stringify({
-			"child": $('#childCheckInList').val(), 
+			"child": name, 
+			"child_id": id, 
 			"guardian": $('#guardianCheckInList').val(),
 			});
 	}
