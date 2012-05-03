@@ -73,10 +73,10 @@ jQuery(document).ready(function ($) {
 	// Need to add getAllAttendance
 
 //	:: Check in a Child
+//	:: Check out a Child
 //	:: Register a Child
 	// Need to add
 	//	- Register a guardian
-	//	- Check out a child
 
 //	:: Helper Functions
 	//	:: clearForm
@@ -108,13 +108,16 @@ jQuery(document).ready(function ($) {
 			success: function(children){
 				//For each child create an <option>
 				$.each(children, function(i, child){
+					var child_id = child.id;
 					var fullName = child.first_name +' ' + child.last_name;
-					$('#childCheckInList').append('<option value="' + fullName + '|' + child.id + '">' + fullName + '</option>');
+					$('#childCheckInList').append('<option value="' + fullName + '|' + child_id + '">' + fullName + '</option>');
+					//Don't really like this solution for allowed guardians but it does work
+					//Would be better to render using a template rather than having all the html in the javascript
+					$('#allowedGuardians').append('<select name="checkOutGuardian" id="' + child_id +'"><option value="' + child.guardian1 + '">' + child.guardian1 + '</option><option value="' + child.guardian2 + '">' + child.guardian2 + '</option><option value="' + child.guardian3 + '">' + child.guardian3 + '</option><option value="' + child.guardian4 + '">' + child.guardian4 + '</option></select>');
 				});
 			}
 		});
   	}
-
 
   	function getAllGuardians(){
   		$.ajax({
@@ -139,20 +142,17 @@ jQuery(document).ready(function ($) {
 			url:attendURL, 
 			dataType: 'json',
 			success: function(children){
-				//alert(children);
-				$('#childrenPresent').html('');
-				//For each child create an <option>
+				
+				//Clear attendance and insert one blank option
+				$('#childrenPresent').html('<option value=""></option>');
+				
+				//For each child create an <option> and append to attendance dropdown
 				$.each(children, function(i, child){
-					//console.log(child.child);
-					$('#childrenPresent').append('<li><input type="radio" name="checkOutChild" value="' + child.child + '" data-checkOutChild="child">' + child.child + '</li>')
-					//$('#childCheckInList').append('<option value="' + child.child + '">' + child.child + '</option>');
+					//$('#childrenPresent').append('<li><input type="radio" class="childPresent" name="checkOutChild" value="' + child.child + '|' + child.child_id + '">' + child.child + '</li>')
+					$('#childrenPresent').append('<option value="' + child.child + '|' + child.child_id + '">' + child.child + '</option>');
 				});
 			}
 		});
-  	}
-
-  	function allowedGuardians(){
-
   	}
 
 //	Check in a child 			
@@ -187,6 +187,47 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
+// Check out a child
+	// Grab guardians from selected child
+	$('#childrenPresent').on('change' ,function(){
+		var val = $('#childrenPresent').val(); //Get value of child option
+		var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
+		var name = array[0]; //Set name
+		var id = array[1];	//Set id
+		//console.log(id);
+		//locate the div with the same id as the child 
+		//change display to block
+		$('#allowedGuardians select').css('display', 'none');
+		$('#allowedGuardians select#' + id).css('display', 'block');
+		
+	});
+
+	//Submit the check out form
+	$('#checkOutForm').on('submit', function(e){
+  		e.preventDefault();
+  		checkOut();
+  	});
+
+  	function checkOut(){
+		$.ajax({
+			url:checkOutURL,
+			type:'PUT',
+			data:checkOutToJSON(),
+			//dataType: 'json',
+			success: function(data){
+				//console.log('Yeah ' + data + ' worked');
+				$('#checkOutConfirmChild').html(data);
+				$('#checkOutConfirm').reveal();
+				clearForm();
+				getAllAttendance();
+			},
+			error: function(){
+				console.log('Ummm, nope');
+			}
+		})
+
+	}
+
 //Register a child
 	$('#addChildForm').on('submit', function(e){
   		e.preventDefault();
@@ -210,19 +251,7 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-// Check out a child
-	$('#checkOutForm').on('submit', function(e){
-  		e.preventDefault();
-  		checkIn();
-  	});
 
-  	function checkOut()	{
-  		$.ajax({
-  			url: checkOutURL,
-  			type: 'POST'
-  		});
-
-  	}
 
 // Helper Functions
 	function clearForm(){
@@ -248,6 +277,32 @@ jQuery(document).ready(function ($) {
 			"child": name, 
 			"child_id": id, 
 			"guardian": $('#guardianCheckInList').val(),
+			});
+	}
+
+/* Save for possible later use
+	function allowedGuardiansToJSON() {
+		var val = $('input[name="checkOutChild"]:checked').val() //Get value of child option
+		var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
+		var name = array[0]; //Set name
+		var id = array[1];	//Set id
+		
+		return JSON.stringify({
+			"child": name, 
+			"child_id": id
+			});
+	}
+*/
+	function checkOutToJSON() {
+		var val = $('#childrenPresent').val(); //Get value of child option
+		var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
+		var name = array[0]; //Set name
+		var id = array[1];	//Set id
+
+		return JSON.stringify({
+			"child": name, 
+			"child_id": id, 
+			"guardian": $('select#' + id).val()
 			});
 	}
 

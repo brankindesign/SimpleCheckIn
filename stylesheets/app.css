@@ -149,6 +149,8 @@ select {
 	border:1px solid #bbb;
 }
 
+#allowedGuardians select {display:none}
+
 /* -----------------------------------------
    Reveal modals
 ----------------------------------------- */

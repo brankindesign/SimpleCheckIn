@@ -109,23 +109,24 @@
 			<div class="six columns centered">
 				<h2>Check Out</h2>
 				<div class="panel">
-					<form action="#" id="checkOutForm" class="nice">
+					<form action="#" method="post" id="checkOutForm" class="nice">
 						<p>
 						<label>Child</label>
 						<div>
-							<ul id="childrenPresent" class="block-grid two-up">
+							<select id="childrenPresent">
 								
-							</ul>
+							</select>
+
 						</div>
 						
 					</p>
 					<p>
 						<label>Guardian</label>
-						<ul class="block-grid two-up" id="allowedGuardians">
+						<div id="allowedGuardians">
 							
-						</ul>
+						</div>
 					</p>
-					
+					<input type="hidden" name="_METHOD" value="PUT"/>
 					<button type="submit" class="nice black button radius">Check Out</button>
 					</form>
 				</div><!-- end panel -->
@@ -345,6 +346,15 @@
 		Thank you for checking in <br>
 		<span id="checkInConfirmChild"></span>
 	</h2>
+	<button class="nice black radius button close-reveal-modal">close</button>
+	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<div id="checkOutConfirm" class="reveal-modal">
+	<h2>
+		<span id="checkOutConfirmChild"></span> has been checked out.
+	</h2>
+	<p>Have a great week!</p>
 	<button class="nice black radius button close-reveal-modal">close</button>
 	<a class="close-reveal-modal">&#215;</a>
 </div>

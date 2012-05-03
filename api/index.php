@@ -75,7 +75,7 @@ $app->get('/attendance', function () {
     $today = date("F j, Y");
 
     //Get all children from DB
-    $sql = "SELECT * FROM attendance WHERE date_in='$today'";
+    $sql = "SELECT * FROM attendance WHERE date_in='$today' AND date_out=''";
     try {
         $db = getConnection();
         $stmt = $db->prepare($sql);  
@@ -108,13 +108,13 @@ $app->post('/checkin', function() use ($app) {
     //Set up the sql statements and injection
     
     $sql = "INSERT INTO attendance (child, child_id, guardian_in, date_in, time_in) 
-            VALUES (:child, :child_id, :guardian, :date_in, :time_in)";
+            VALUES (:child, :child_id, :guardian_in, :date_in, :time_in)";
         try {
             $db = getConnection();
             $stmt = $db->prepare($sql);  
             $stmt->bindParam("child", $child);
             $stmt->bindParam("child_id", $child_id);
-            $stmt->bindParam("guardian", $guardian);
+            $stmt->bindParam("guardian_in", $guardian);
             $stmt->bindParam("date_in", $today);
             $stmt->bindParam("time_in", $time);
             $stmt->execute();
@@ -126,6 +126,76 @@ $app->post('/checkin', function() use ($app) {
     
     echo $child;
 });
+
+//Checkout a Child
+$app->put('/checkout/', function() use ($app){
+    
+    $body = json_decode($app->request()->getBody());
+
+    $child = $body->child;
+    $child_id = $body->child_id;
+    $guardian = $body->guardian;
+    $today = date("F j, Y");
+    $time = date("g:i a");
+    
+    $sql = "UPDATE attendance 
+            SET guardian_out='" . $guardian . "', time_out='" . $time . "', date_out='".$today."'
+            WHERE child='".$child."'
+            AND child_id='".$child_id."'
+            AND date_in='".$today."'";
+        try {
+            $db = getConnection();
+            $stmt = $db->prepare($sql);  
+            $stmt->execute();
+            
+        } catch(PDOException $e) {
+            error_log($e->getMessage(), 3, '/var/tmp/php.log');
+            echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+        }    
+    
+    echo $child;
+
+});
+
+//Check out a Child
+/*
+$app->put('/checkout/:id', function($id) use ($app) {
+    //Set current date and time
+    $today = date("F j, Y");
+    $time = date("g:i a");
+        
+    //Get the form data
+    $body = json_decode($app->request()->getBody());
+    
+    //Set child and guardian
+    $child = $body->child;
+    $child_id = $body->child_id;
+    $guardian = $body->guardian;
+
+    //Set up the sql statements and injection
+    
+    $sql = "UPDATE attendance (guardian_out, time_out) 
+            VALUES (:guardian_out, :time_out)
+            WHERE child='$child'";
+        try {
+            $db = getConnection();
+            $stmt = $db->prepare($sql);  
+            $stmt->bindParam("child", $child);
+            $stmt->bindParam("child_id", $id);
+            $stmt->bindParam("guardian_out", $guardian);
+            $stmt->bindParam("time_out", $time);
+            $stmt->execute();
+            
+        } catch(PDOException $e) {
+            error_log($e->getMessage(), 3, '/var/tmp/php.log');
+            echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+        }    
+    
+    echo $child;
+});
+*/
+
+
 
 //Register a Child
 $app->post('/children', function() use ($app) {
