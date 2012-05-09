@@ -157,45 +157,6 @@ $app->put('/checkout/', function() use ($app){
 
 });
 
-//Check out a Child
-/*
-$app->put('/checkout/:id', function($id) use ($app) {
-    //Set current date and time
-    $today = date("F j, Y");
-    $time = date("g:i a");
-        
-    //Get the form data
-    $body = json_decode($app->request()->getBody());
-    
-    //Set child and guardian
-    $child = $body->child;
-    $child_id = $body->child_id;
-    $guardian = $body->guardian;
-
-    //Set up the sql statements and injection
-    
-    $sql = "UPDATE attendance (guardian_out, time_out) 
-            VALUES (:guardian_out, :time_out)
-            WHERE child='$child'";
-        try {
-            $db = getConnection();
-            $stmt = $db->prepare($sql);  
-            $stmt->bindParam("child", $child);
-            $stmt->bindParam("child_id", $id);
-            $stmt->bindParam("guardian_out", $guardian);
-            $stmt->bindParam("time_out", $time);
-            $stmt->execute();
-            
-        } catch(PDOException $e) {
-            error_log($e->getMessage(), 3, '/var/tmp/php.log');
-            echo '{"error":{"text":'. $e->getMessage() .'}}'; 
-        }    
-    
-    echo $child;
-});
-*/
-
-
 
 //Register a Child
 $app->post('/children', function() use ($app) {
@@ -216,11 +177,6 @@ $app->post('/children', function() use ($app) {
 
     $sql = "INSERT INTO child (first_name, last_name, active, category, birthday, notes, allergies, guardian1, guardian2, guardian3, guardian4)
             VALUES (:first_name, :last_name, :active, :category, :birthday, :notes, :allergies, :guardian1, :guardian2, :guardian3, :guardian4)";
-
-/*
-    $sql = "INSERT INTO child (first_name, last_name, active, category, birthday, allergies, notes, photo, guardian1, guardian2, guardian3, guardian4)
-            VALUES (:first_name, :last_name, :active, :category, :birthday, :allergies, :notes, :photo, :guardian1, :guardian2, :guardian3, :guardian4)";
-*/
         try {
             $db = getConnection();
             $stmt = $db->prepare($sql);  
@@ -246,7 +202,12 @@ $app->post('/children', function() use ($app) {
         echo $first_name . ' ' . $last_name;
 });
 
-
+//NEED TO ADD THE FOLLOWING
+//-------------------------
+// Update child info and status
+// Register a Guardian
+// Update a Guardian
+// Get Attendance record
 
 
 //PUT route

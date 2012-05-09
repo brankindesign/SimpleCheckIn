@@ -1,3 +1,19 @@
+//Basic Pub/Sub via Jeffrey Way
+(function($) {
+	var o = $( {} );
+
+	$.each({
+		on: 'subscribe',
+		trigger: 'publish',
+		off: 'unsubscribe'
+	}, function( key, api ) {
+		$[api] = function() {
+			o[key].apply( o, arguments );
+		}
+	});
+
+})(jQuery);
+
 /* Foundation v2.2 http://foundation.zurb.com */
 jQuery(document).ready(function ($) {
 
@@ -84,7 +100,7 @@ jQuery(document).ready(function ($) {
 	//	:: registerChildToJSON
 //.......................
 //////////////////////////////////////////////////////////////////////////////
-
+/*
   	//Set up checkin app routes
   	var childURL = "http://localhost/checkin/api/children";
   	var guardURL = "http://localhost/checkin/api/guardian";
@@ -158,6 +174,7 @@ jQuery(document).ready(function ($) {
 //	Check in a child 			
 	//Show other guardian input in check in area
     $("#guardianCheckInList").change(function(){
+		//var gs = $(this).val();
 		var gs = $(this).val();
 		if (gs === 'other'){
 			$('#otherGuardian').slideToggle();
@@ -169,6 +186,7 @@ jQuery(document).ready(function ($) {
 
   	$('#checkInForm').on('submit', function(e){
   		e.preventDefault();
+  		//Add form check to make sure guardian is selected
   		checkIn();
   	});
 
@@ -205,6 +223,8 @@ jQuery(document).ready(function ($) {
 	//Submit the check out form
 	$('#checkOutForm').on('submit', function(e){
   		e.preventDefault();
+  		//Add form check to make sure guardian is selected
+  		
   		checkOut();
   	});
 
@@ -273,10 +293,15 @@ jQuery(document).ready(function ($) {
 		var name = array[0]; //Set name
 		var id = array[1];	//Set id
 		
+		var g = $('#guardianCheckInList').val();
+		if (g === 'other'){
+			var g = $('#guardianIn').val();
+		}
+
 		return JSON.stringify({
 			"child": name, 
 			"child_id": id, 
-			"guardian": $('#guardianCheckInList').val(),
+			"guardian": g,
 			});
 	}
 
@@ -293,6 +318,7 @@ jQuery(document).ready(function ($) {
 			});
 	}
 */
+/*
 	function checkOutToJSON() {
 		var val = $('#childrenPresent').val(); //Get value of child option
 		var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
@@ -322,5 +348,5 @@ jQuery(document).ready(function ($) {
 		    "guardian4": $('#guardian4').val()
 		});
 	}
-
+*/
 });
