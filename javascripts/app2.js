@@ -51,7 +51,6 @@
 			this.checkOutChildContainer = $('select#childrenPresent');
 			this.checkOutGuardianContainer = $('#allowedGuardians');
 
-			
 		},
 
 		bindEvents: function(){
@@ -60,6 +59,8 @@
 	  		$('#checkInForm').on('submit', this.checkIn);
 	  		$('#checkOutForm').on('submit', this.checkOut);
 	  		this.checkOutChildContainer.on('change', this.showApprovedGuardians);
+	  		$('#addChildForm').on('submit', this.registerChild);
+	  		$('#addGuardianForm').on('submit', this.registerGuardian);
 	  	},
 
 		tests: function() {
@@ -236,22 +237,44 @@
 	  	},
 
 	  	//Register Child and Guardian
-	  	registerChild:  function(){
+	  	registerChild:  function(e){
+	  		e.preventDefault();
 	  		var self = CheckIn;
 
-
-	  		//Clear the form and reload data
-	  		self.clearForm();
-	  		self.getAllChildren();
+	  		$.ajax({
+				url: self.childURL,
+				type: 'POST',
+				data: self.registerChildToJSON(),
+				//dataType: 'json',
+				success: function(data){
+					//alert(data)
+					$('#registerConfirmChild').html(data);
+					$('#registerConfirm').reveal();
+					//Clear the form and reload data
+			  		self.clearForm();
+			  		self.getAllChildren();
+				}
+			});
+	  		
 	  	},
 	  	
-	  	registerGuardian: function(){
+	  	registerGuardian: function(e){
+	  		e.preventDefault();
 	  		var self = CheckIn;
-
-	  		
-	  		//Clear the form and reload data
-	  		self.clearForm();
-	  		self.getAllGuardians();
+	  		$.ajax({
+				url: self.guardURL,
+				type: 'POST',
+				data: self.registerGuardianToJSON(),
+				//dataType: 'json',
+				success: function(data){
+					//alert(data)
+					$('#registerConfirmGuardian').html(data);
+					$('#registerConfirm').reveal();
+					//Clear the form and reload data
+			  		//self.clearForm();
+			  		//self.getAllGuardians();
+				}
+			});
 	  	},
 
 
@@ -301,13 +324,37 @@
 		},
 		
 		registerChildToJSON: function(){
-
+			return JSON.stringify({
+				"first_name": $('#first-name-child').val(),
+			    "last_name": $('#last-name-child').val(),
+			    "active": $('#active').val(),
+			    "category": "Child",
+			    "birthday": $('#dobMonth').val() + '/' + $('#dobDay').val() + '/' + $('#dobYear').val(),
+			    "allergies":$('#allergyNotes').val(),
+			    "notes": $('#childNotes').val(),
+			    "photo": $('#childPhoto').val(),
+			    "guardian1": $('#guardian1').val(),
+			    "guardian2": $('#guardian2').val(),
+			    "guardian3": $('#guardian3').val(),
+			    "guardian4": $('#guardian4').val()
+			});
 		},
 		
 		registerGuardianToJSON: function(){
-
+			return JSON.stringify({
+				"first_name": $('#first-name-guardian').val(),
+			    "last_name": $('#last-name-guardian').val(),
+			    "active": $('#active').val(),
+			    "phone": $('#guardian-phone').val(),
+			    "sms": $('input[name=sms]:radio:checked').val(),
+			    "carrier": $('#carrier').val(),
+			    "email": $('#guardian-email').val(),
+			    "child1": $('#child1').val(),
+			    "child2": $('#child2').val(),
+			    "child3": $('#child3').val(),
+			    "child4": $('#child4').val()
+			});
 		}
-
 	};
 
 	//Get it rolling

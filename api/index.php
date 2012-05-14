@@ -202,6 +202,53 @@ $app->post('/children', function() use ($app) {
         echo $first_name . ' ' . $last_name;
 });
 
+
+//Register a Guardian
+$app->post('/guardian', function() use ($app) {
+    $body = json_decode($app->request()->getBody());
+    
+    $first_name = $body->first_name;
+    $last_name = $body->last_name;
+    $active = $body->active;
+    $phone = $body->phone;
+    $sms = $body->sms;
+    $email = $body->email;
+    $carrier = $body->carrier;
+    $child1 = $body->child1;
+    $child2 = $body->child2;
+    $child3 = $body->child3;
+    $child4 = $body->child4;
+
+    $sql = "INSERT INTO guardian (first_name, last_name, active, phone, sms, email, carrier, child1, child2, child3, child4)
+            VALUES (:first_name, :last_name, :active, :phone, :sms, :email, :carrier, :child1, :child2, :child3, :child4)";
+        try {
+            $db = getConnection();
+            $stmt = $db->prepare($sql);  
+            $stmt->bindParam("first_name", $first_name);
+            $stmt->bindParam("last_name", $last_name);
+            $stmt->bindParam("active", $active);
+            $stmt->bindParam("phone", $phone);
+            $stmt->bindParam("sms", $sms);
+            $stmt->bindParam("email", $email);
+            $stmt->bindParam("carrier", $carrier);
+            $stmt->bindParam("child1", $child1);
+            $stmt->bindParam("child2", $child2);
+            $stmt->bindParam("child3", $child3);
+            $stmt->bindParam("child4", $child4);
+        
+            $stmt->execute();
+            
+        } catch(PDOException $e) {
+            error_log($e->getMessage(), 3, '/var/tmp/php.log');
+            echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+        }    
+        echo $first_name . ' ' . $last_name;
+});
+
+
+
+
+
 //NEED TO ADD THE FOLLOWING
 //-------------------------
 // Update child info and status
