@@ -12,14 +12,24 @@
 	  		//Settings
 	  		this.orgName = 'St. Paul UMC';
 	  		this.cache();
-	  		this.templateChildOption = '<option value="{{child}}|{{id}}">{{child}}</option>';
 	  		this.children = [];
+	  		
+	  		
+	  		//Templates //move out later?//
+	  		this.templateChildOption = '<option value="{{child}}|{{id}}">{{child}}</option>';
+	  		this.templateGuardianOption = '<option value="{{guardian}}">{{guardian}}</option>';
+	  		this.templateGuardianCheckOut = '<select name="checkOutGuardian" id="{{child_id}}"><option value="{{g1}}">{{g1}}</option><option value="{{g2}}">{{g2}}</option><option value="{{g3}}">{{g3}}</option><option value="{{g4}}">{{g4}}</option></select>';
+
+			this.blankOption = '<option value=""></option>'
+			this.otherOption = '<option value="other">Other</option>'
+
 
 			//Run on loading app
 			this.subscriptions();
 			this.getAllChildren();
 			this.getAllGuardians();
 			this.getAllAttendance();
+			this.bindEvents();
 			//this.tests();
 
 			return this;
@@ -29,21 +39,34 @@
 		subscriptions: function(){
 			var self = CheckIn;
 			//$.subscribe( 'checkin/getAllChildren',self.populateCheckIn);
-			$.subscribe( 'checkin/getAllChildren', self.populateCheckIn);
-			
-			//$.subscribe( 'checkin/getAllGuardians', self.populateCheckIn);
+			$.subscribe( 'checkin/getAllChildren', self.populateChildCheckIn);
+			$.subscribe( 'checkin/getAllChildren', self.populateGuardianCheckOut);
+			$.subscribe( 'checkin/getAllGuardians', self.populateGuardianCheckIn);
+			$.subscribe( 'checkin/getAllAttendance', self.populateChildCheckOut);
 		},
 
 		cache: function(){
 			this.checkInChildContainer = $('select#childCheckInList');
+			this.checkInGuardianContainer = $('select#guardianCheckInList');
+			this.checkOutChildContainer = $('select#childrenPresent');
+			this.checkOutGuardianContainer = $('#allowedGuardians');
+
 			
 		},
+
+		bindEvents: function(){
+		//Bind the following actions so that if one of them happens then the corresponding function will be called
+	  		$("#guardianCheckInList").on('change', this.showOtherGuardian);
+	  		$('#checkInForm').on('submit', this.checkIn);
+	  		$('#checkOutForm').on('submit', this.checkOut);
+	  		this.checkOutChildContainer.on('change', this.showApprovedGuardians);
+	  	},
 
 		tests: function() {
-			
+			//just here for testing 			
 		},
 
-		//Get data
+//////////Get data
 		getAllChildren: function(){
 			var self = CheckIn;
 		
@@ -52,31 +75,42 @@
 				dataType: 'json',
 				success: function(data){
 					CheckIn.children = data;
-					
 					$.publish( 'checkin/getAllChildren' );
 				}
-
 			});
-
 		},
 
 	  	getAllGuardians: function(){
-			$.publish( 'checkin/getAllGuardians');
+	  		var self = CheckIn;
+
+			return $.ajax({
+				url: self.guardURL,
+				dataType: 'json',
+				success: function(data){
+					CheckIn.guardians = data;
+					$.publish( 'checkin/getAllGuardians' );
+				}
+			});
 	  	},
 
 	  	getAllAttendance: function(){
-	  		$.publish( 'checkin/getAllAttendance');
+	  		var self = CheckIn;
+
+	  		return $.ajax({
+	  			url: self.attendURL,
+	  			dataType: 'json',
+	  			success:function(data){
+	  				CheckIn.attendance = data;
+	  				$.publish('checkin/getAllAttendance');
+	  			}
+	  		});
 	  	},
 
-	  	// Populate fields
-	  	populateCheckIn: function(){
+////////// Populate fields
+	  	populateChildCheckIn: function(){
 	  		var self = CheckIn;
-			//console.log(CheckIn.children);
 			//Populate list of children
-
-			console.log(self.children);
-
-			self.checkInChildContainer.append(
+			self.checkInChildContainer.html('').append(self.blankOption).append(
 				$.map( self.children, function( i ) {
 					var id = i.id;
 					var name = 
@@ -84,34 +118,121 @@
 					return self.templateChildOption.replace(/{{child}}/g, name)
 						.replace(/{{id}}/g, id);
 				}).join('')
-
 			);
-
-			//Populate list of adults
 	  	},
 
-	  	populateCheckOut: function(){
-
+	  	populateGuardianCheckIn: function(){
+	  		var self = CheckIn;
+			//Populate list of Guardians
+			self.checkInGuardianContainer.html('').append(self.blankOption).append(
+				$.map( self.guardians, function( i ) {
+					var id = i.id;
+					var name = 
+						i.first_name +' ' + i.last_name;
+					return self.templateGuardianOption.replace(/{{guardian}}/g, name);
+				}).join('')
+			).append(self.otherOption);
 	  	},
 
-	  	//Check In and Check Out
+
+	  	populateChildCheckOut: function(){
+	  		var self = CheckIn;
+
+	  		//Populate list of Guardians
+			self.checkOutChildContainer.html('').append(self.blankOption).append(
+				$.map( self.attendance, function( i ) {
+					var id = i.child_id;
+					var name = i.child;
+					return self.templateChildOption.replace(/{{child}}/g, name)
+						.replace(/{{id}}/g, id);;
+				}).join('')
+			);
+	  	},
+
+	  	populateGuardianCheckOut: function(){
+	  		var self = CheckIn;
+			//Populate list of children
+			self.checkOutGuardianContainer.html('').append(
+				$.map( self.children, function( i ) {
+					var id = i.id;
+					var g1 = i.guardian1;
+					var g2 = i.guardian2;
+					var g3 = i.guardian3;
+					var g4 = i.guardian4;
+					return self.templateGuardianCheckOut.replace(/{{child_id}}/g, id)
+														.replace(/{{g1}}/g, g1)
+														.replace(/{{g2}}/g, g2)
+														.replace(/{{g3}}/g, g3)
+														.replace(/{{g4}}/g, g4);
+				}).join('')
+			);
+	  	},
+
+//////////Check In and Check Out
+	  	showOtherGuardian: function() {
+		  	var gs = $(this).val();
+			if (gs === 'other'){
+				$('#otherGuardian').slideToggle();
+			}
+			else{
+				$('#otherGuardian').slideUp();
+			}
+		},
+
+		showApprovedGuardians: function(){
+			console.log('hello from show approved');
+			var val = $('#childrenPresent').val(); //Get value of child option
+			console.log(val);
+			var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
+			var name = array[0]; //Set name
+			var id = array[1];	//Set id
+			console.log(id);
+			//locate the div with the same id as the child 
+			//change display to block
+			$('#allowedGuardians select').css('display', 'none');
+			$('#allowedGuardians select#' + id).css('display', 'block');
+		},
 	  	
-	  	checkIn: function(){
+	  	checkIn: function(e){
+	  		e.preventDefault();
 	  		var self = CheckIn;
 
-	  		
-	  		//Clear the form and reload data
-	  		self.clearForm();
-	  		self.getAllAttendance();
+	  		$.ajax({
+				url: self.checkInURL,
+				type: 'POST',
+				data: self.checkInToJSON(),
+				//dataType: 'json',
+				success: function(data){
+					$('#checkInConfirmChild').html(data);
+					$('#checkInConfirm').reveal();
+					//Clear the form and reload data
+					self.clearForm();
+			  		self.getAllAttendance();
+	  			}
+			});	  		
 	  	},
 
-	  	checkOut: function(){
+	  	checkOut: function(e){
+	  		e.preventDefault();
 	  		var self = CheckIn;
 
-	  		
-	  		//Clear the form and reload data
-	  		self.clearForm();
-	  		self.getAllAttendance();
+	  		$.ajax({
+				url:self.checkOutURL,
+				type:'PUT',
+				data:self.checkOutToJSON(),
+				//dataType: 'json',
+				success: function(data){
+					//console.log('Yeah ' + data + ' worked');
+					$('#checkOutConfirmChild').html(data);
+					$('#checkOutConfirm').reveal();
+					//Clear the form and reload data
+			  		self.clearForm();
+			  		self.getAllAttendance();
+				},
+				error: function(){
+					console.log('Ummm, nope');
+				}
+			})
 	  	},
 
 	  	//Register Child and Guardian
@@ -148,10 +269,34 @@
 	  	},
 
 	  	checkInToJSON: function(){
+	  		var val = $('#childCheckInList').val(); //Get value of child option
+			var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
+			var name = array[0]; //Set name
+			var id = array[1];	//Set id
+			
+			var g = $('#guardianCheckInList').val();
+			if (g === 'other'){
+				var g = $('#guardianIn').val();
+			}
 
+			return JSON.stringify({
+				"child": name, 
+				"child_id": id, 
+				"guardian": g,
+			});
 	  	},
 		
-		checkInToJSON: function(){
+		checkOutToJSON: function(){
+			var val = $('#childrenPresent').val(); //Get value of child option
+			var array = val.split('|'); //This is a multiple parameter value. Split on '|'.
+			var name = array[0]; //Set name
+			var id = array[1];	//Set id
+
+			return JSON.stringify({
+				"child": name, 
+				"child_id": id, 
+				"guardian": $('select#' + id).val()
+			});
 
 		},
 		
