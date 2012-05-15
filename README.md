@@ -8,9 +8,10 @@ We created this to help small churches and other organizations put into place a 
 ***
 ###Installation:
 
+
 ####Database:
 
-*Simple Checkin was developed using a MySQL database. The 'checkin.sql' file will build your databse structure for you.*
+*Simple Checkin was developed using a MySQL database. The 'checkin_SQLsetup.sql' file will build your databse structure for you.*
 
 1.   Login to phpMyAdmin and create a new database called 'checkin'.
 2.   If you would like to import the sql structure go to the Import tab, browse your computer to where you saved Simple Checkin, the click 'Go'.
@@ -31,9 +32,8 @@ You can install it on a server or run it on a local machine using a LAMP, MAMP o
 
 ***
 ### To Do
-
-* Add SQL structure file
-* Set up PHP files to connect to SQL
+* Modify CCS to accomodate the navigation on other devices besides desktops
+* Create a secure admin area for updating children and guardians
 
 ### Contributing
 If you are interested in contributing to the project please fork the project on github. https://github.com/brankindesign/SimpleCheckIn
