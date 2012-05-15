@@ -1,2 +1,4 @@
 NOTES on what to work on:
 
+Add admin area
+
